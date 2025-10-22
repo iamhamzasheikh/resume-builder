@@ -1,13 +1,15 @@
 import React from 'react'
 import Hero from '../components/Home/Hero'
 import Banner from '../components/Home/Banner'
+import Features from '../components/Home/Features'
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Banner />
       <Hero/>
-    </div>
+      <Features/>
+    </>
   )
 }
 

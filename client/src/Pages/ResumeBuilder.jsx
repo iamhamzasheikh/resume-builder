@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
 import PersonalInfoForm from '../components/PersonalInfoForm'
 import { ArrowLeftIcon, User, FileText, GraduationCap, Briefcase, FolderIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import ResumePreview from '../components/ResumePreview.jsx'
+import TemplateSelector from '../components/TemplateSelector'
 
 const ResumeBuilder = () => {
 
@@ -73,7 +75,7 @@ const ResumeBuilder = () => {
               {/* progress-bar */}
               <hr className='absolute top-0 right-0 left-0 border-2 border-gray-200' />
               <hr style={{ width: `${activeSectionIndex * 100 / (sections.length - 1)}` }}
-                className='absolute top-0 left-0 h-1 bg-gradient-to-r 
+                className='absolute top-0 left-0 h-1 bg-gradient-to-r
               from-green-500 to-green-600 border-none transition-all duration-2000'/>
 
               {/* section-Navigation */}
@@ -81,7 +83,10 @@ const ResumeBuilder = () => {
               <div className="flex justify-between items-center mb-6 border-b
               border-gray-300 py-1">
 
-                <div></div>
+                <div>
+                  <TemplateSelector selectedTemplate={resumeData.template}
+                    onChange={(template) => setResumeData(prev => ({ ...prev, template }))} />
+                </div>
 
                 <div className='flex items-center'>
                   {activeSectionIndex !== 0 && (
@@ -124,7 +129,18 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Right-panel-preview */}
-          <div> </div>
+
+          <div className='lg:col-span-7 max-lg:mt-6'>
+            <div>
+              {/* ---Buttons */}
+            </div>
+            {/* ---Resume-Preview */}
+
+            <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} />
+
+
+          </div>
+
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { ArrowLeftIcon, User, FileText, GraduationCap, Briefcase, FolderIcon, Ch
 import ResumePreview from '../components/ResumePreview.jsx'
 import TemplateSelector from '../components/TemplateSelector'
 import ColorPicker from '../components/ColorPicker.jsx'
+import ProfessionalSummaryForm from '../components/ProfessionalSummaryForm'
 
 const ResumeBuilder = () => {
 
@@ -121,6 +122,11 @@ const ResumeBuilder = () => {
                       removeBackground={removeBackground}
                       setRemoveBackground={setRemoveBackground} />
                   </div>
+                )}
+
+                {activeSection.id === 'summary' && (
+                  <ProfessionalSummaryForm data={resumeData.professional_summary} onChange={(data) => setResumeData(prev => ({ ...prev, professional_summary: data }))}
+                    setResumeData={setResumeData} />
                 )}
               </div>
 

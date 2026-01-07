@@ -1,5 +1,5 @@
 import React from 'react'
-import { Plus, Briefcase, Trash2 } from 'lucide-react';
+import { Plus, Briefcase, Trash2, Sparkles } from 'lucide-react';
 
 const ExperienceForm = ({ data, onChange }) => {
 
@@ -47,7 +47,7 @@ const ExperienceForm = ({ data, onChange }) => {
                 {/* right-side */}
 
                 <button onClick={addExperience} className='flex items-center gap-2 px-3 py-1 text-sm
-                bg-purple-100 text-purple-700 rounded hover:bg-purple-200
+                bg-green-100 text-green-900 rounded hover:bg-green-200
                 transition-colors disabled: opacity-50'>
                     <Plus className='size-4' />
                     Add Experience
@@ -91,13 +91,27 @@ const ExperienceForm = ({ data, onChange }) => {
                                     type="month" className='px-3 py-2 text-sm rounded-lg disabled:bg-gray-100' disabled={experience.is_current} />
                             </div>
 
-                            <label >
+                            <label className='flex items-center gap-2'>
                                 <input className='rounded border-gray-300 text-blue-600 focus:ring-blue-500' type="checkbox" checked={experience.is_current || false}
                                     onChange={(e) => { updateExperience(index, "is_current", e.target.checked ? true : false); }} />
                                 <span className='text-sm text-gray-700'>Currently working here</span>
                             </label>
 
                             <div className='space-y-2'>
+
+                                <div className='flex justify-between items-center'>
+                                    <label className='text-sm font-medium text-gray-700'>Job Description</label>
+                                    <button className='flex items-center justify-between gap-1 px-2 py-1 text-xs
+                                     bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50'>
+                                        <Sparkles className="w-3 h-3" />
+                                        Enhance with AI
+                                    </button>
+                                </div>
+
+                                <textarea value={experience.description || ""} rows={4} onChange={(e) => updateExperience(index, "description", e.target.value)}
+                                    placeholder='Describe your key responsibility and achievements...'
+                                    className='w-full text-sm px-3 py-2 rounded-lg resize-none'
+                                ></textarea>
 
                             </div>
 

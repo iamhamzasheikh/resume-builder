@@ -1,12 +1,19 @@
-import React from 'react'
-import { User2Icon, Mail, Lock } from 'lucide-react'
+import React, {useState}  from 'react'
+import api from '../configs/api.js'
+import { useDispatch } from 'react-redux'
+import toast from 'react-hot-toast'
+import { login } from '../app/features/authSlice.js'
+import { User2Icon, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 
 const Login = () => {
+
+  const dispatch = useDispatch();
 
   const query = new URLSearchParams(window.location.search);
   const urlState = query.get('state')
 
-  const [state, setState] = React.useState(urlState || "login")
+  const [state, setState] = useState(urlState || "login")
+  const [showPassword, setShowPassword] = useState(false)
 
   const [formData, setFormData] = React.useState({
     name: '',
@@ -15,7 +22,16 @@ const Login = () => {
   })
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    try {
+      const { data } = await api.post(`/api/users/${state}`, formData);
+      dispatch(login(data))
+      localStorage.setItem('token', data.token)
+      toast.success(data.message)
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
 
   }
 
@@ -23,8 +39,6 @@ const Login = () => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
-
-
 
   return (
     <div className='flex items-center justify-center min-h-screen'>
@@ -41,10 +55,25 @@ const Login = () => {
           <Mail size={13} color='#6B7280' />
           <input type="email" name="email" placeholder="Email id" className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} required />
         </div>
+
+
         <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
           <Lock size={13} color='#6B7280' />
-          <input type="password" name="password" placeholder="Password" className="border-none outline-none ring-0" value={formData.password} onChange={handleChange} required />
+          <input type={showPassword ? 'text' : 'password'}
+            name="password"
+            placeholder="Password"
+            className="border-none outline-none ring-0"
+            value={formData.password} onChange={handleChange} required />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(prev => !prev)}
+            className="text-gray-500">
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
         </div>
+
+
         <div className="mt-4 text-left text-green-500">
           <button className="text-sm" type="reset">Forget password?</button>
         </div>

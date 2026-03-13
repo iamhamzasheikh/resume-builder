@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Layout from './pages/Layout'
-import Preview from './pages/Preview'
-import Dashboard from './pages/Dashboard'
+import Home from './Pages/Home'
+import Login from './Pages/Login'
+import Layout from './Pages/Layout'
+import Preview from './Pages/Preview'
+import Dashboard from './Pages/Dashboard'
 import NotFound from './components/NotFound'
-import ResumeBuilder from './pages/ResumeBuilder'
+import ResumeBuilder from './Pages/ResumeBuilder'
 import { Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import api from './configs/api.js'
 import { login, setLoading } from './app/features/authSlice.js'
+import {Toaster} from 'react-hot-toast'
+import api from './configs/api.js'
 
 const App = () => {
-
+ 
   const dispatch = useDispatch()
 
   const getUserData = async () => {
@@ -42,7 +43,7 @@ const App = () => {
   return (
 
     <>
-
+    <Toaster />
       <Routes>
         <Route path='/' element={<Home />} />
 

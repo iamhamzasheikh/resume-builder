@@ -34,7 +34,7 @@ export const enhanceProfessionalSummary = async (req, res) => {
 
 
     } catch (error) {
-        return res.status().json({ message: error.message })
+        return res.status(500).json({ message: error.message })
     }
 
 }
@@ -73,18 +73,20 @@ export const enhanceJobDescription = async (req, res) => {
 
 
     } catch (error) {
-        return res.status().json({ message: error.message })
+        return res.status(500).json({ message: error.message })
     }
 }
 
 // controller for uploading resume to the database 
 // POST: /api/ai/upload-resume
 
-export const uploadResume = async () => {
+export const uploadResume = async (req, res) => {
 
     try {
 
         const { resumeText, title } = req.body;
+        console.log("RESUME TEXT RECEIVED:", resumeText); // add this
+        console.log("LENGTH:", resumeText?.length);        // add this
         const userId = req.userId;
 
         if (!resumeText) {
@@ -173,7 +175,7 @@ export const uploadResume = async () => {
 
 
     } catch (error) {
-        return res.status().json({ message: error.message })
+        return res.status(500).json({ message: error.message })
     }
 
 }

@@ -93,7 +93,7 @@ export const getPublicResumeById = async (req, res) => {
 //updating the resume 
 //PUT: /api/resumes/update
 
-export const updateResume = async () => {
+export const updateResume = async (req, res) => {
 
     try {
         const userId = req.userId;

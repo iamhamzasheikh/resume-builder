@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [editResumeId, setEditResumeId] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
 
   const navigate = useNavigate();
@@ -61,7 +62,18 @@ const Dashboard = () => {
     try {
 
       const resumeText = await pdfToText(resume);
-      const { data } = await api.post('/api/ai/upload-resume', { title, resumeText }, { headers: { Authorization: token } });
+      // const { data } = await api.post('/api/ai/upload-resume', { title, resumeText }, { headers: { Authorization: token } });
+      const { data } = await api.post('/api/ai/upload-resume', { title, resumeText },
+        {
+          headers: { Authorization: token },
+          onUploadProgress: (progressEvent) => {
+            const percent = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percent);
+          }
+        }
+      );
       setTitle('');
       setResume(null)
       setShowUploadResume(false)
@@ -79,8 +91,7 @@ const Dashboard = () => {
 
     try {
       e.preventDefault();
-      const { data } = await api.put((`/api/resumes/update`, { resumeId: editResumeId, resumeData: { title } },
-        { headers: { Authorization: token } }));
+      const { data } = await api.put(`/api/resumes/update`, { resumeId: editResumeId, resumeData: { title } }, { headers: { Authorization: token } });
       setAllResumes(allResumes.map(resume => resume._id === editResumeId ? { ...resume, title } : resume))
       setTitle('')
       setEditResumeId('')
@@ -254,7 +265,8 @@ const Dashboard = () => {
               <button disabled={isLoading}
                 className='w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70'>
                 {isLoading && <LoaderCircleIcon className='animate-spin size-4 text-white' />}
-                {isLoading ? 'uploading...' : 'Upload Resume'}
+                {/* {isLoading ? 'uploading...' : 'Upload Resume'} */}
+                {isLoading ? `Uploading ${uploadProgress}%` : 'Upload Resume'}
 
               </button>
               <XIcon className='absolute top-4 right-4 text-slate-400 hover:text-slate-600

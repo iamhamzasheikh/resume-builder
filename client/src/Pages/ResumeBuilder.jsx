@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { dummyResumeData } from '../assets/assets'
+import api from '../configs/api.js'
 import PersonalInfoForm from '../components/PersonalInfoForm'
 import { ArrowLeftIcon, DownloadIcon, EyeIcon, EyeOffIcon, User, FileText, GraduationCap, Briefcase, FolderIcon, ChevronLeft, ChevronRight, Share2Icon } from 'lucide-react'
 import ResumePreview from '../components/ResumePreview.jsx'
@@ -11,10 +11,14 @@ import ExperienceForm from '../components/ExperienceForm'
 import EducationForm from '../components/EducationForm'
 import ProjectForm from '../components/ProjectForm'
 import SkillsForm from '../components/SkillsForm'
+import { useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
 
 const ResumeBuilder = () => {
 
   const { resumeId } = useParams();
+
+  const { token } = useSelector(state => state.auth)
 
   const [resumeData, setResumeData] = useState({
     _id: '',
@@ -30,13 +34,22 @@ const ResumeBuilder = () => {
     public: false,
   })
 
+
+
   const loadExistingResume = async () => {
 
-    const resume = dummyResumeData.find(resume => resume._id === resumeId);
-    if (resume) {
-      setResumeData(resume);
-      document.title = resume.title;
+    try {
+
+      const { data } = await api.get('/api/resumes/get/' + resumeId, { headers: { Authorization: token } });
+      if (data.resume) {
+        setResumeData(data.resume)
+        document.title = data.resume.title
+      }
+
+    } catch (error) {
+      console.log(error.message)
     }
+
   }
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -60,7 +73,21 @@ const ResumeBuilder = () => {
 
 
   const changeResumeVisibility = async () => {
-    setResumeData({ ...resumeData, public: !resumeData.public })
+
+    try {
+
+      const formData = new formData()
+      formData.append('resumeId', resumeId)
+      formData.append('resumeData', JSON.stringify({ public: !resumeData.public }))
+
+      const { data } = await api.put('/api/resumes/update', formData, { headers: { Authorization: token } })
+      setResumeData({ ...resumeData, public: !resumeData.public })
+      toast.success(data.success)
+
+    } catch (error) {
+      console.log(error.message || 'Error in saving resume')
+    }
+
   }
 
   const handleShare = () => {
@@ -79,6 +106,22 @@ const ResumeBuilder = () => {
   const downloadResume = () => {
     window.print();
   }
+
+  const saveResume = async () => {
+
+    try {
+      
+      let updatedResumeData = structuredClone(resumeData);
+
+      /// remove image from updates resume
+
+
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+
 
 
   return (
